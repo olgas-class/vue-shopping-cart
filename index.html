@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>Vue Shopping Cart</title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="card">
+        <div class="image">
+          <img
+            :src="getImagePath()"
+            :alt="getTitle()"
+          />
+        </div>
+
+        <div class="detail">
+          <h1 class="title">{{ getTitle() }}</h1>
+          <p class="price">€ {{ getFullPrice() }}</p>
+
+          <h3>Colore:</h3>
+          <ul class="colors">
+            <li
+              v-for="(color, index) in product.colors"
+              :key="index"
+              :style="{'background-color': color}"
+              class="color"
+              :class="{'selected': color === selectedColor}"
+              @click="changeColor(color)"
+            ></li>
+          </ul>
+
+          <h3>Memoria:</h3>
+          <div class="sizes">
+            <div v-for="(option, index) in product.options" :key="index">
+              <input
+                type="radio"
+                name="size"
+                :id="option.text"
+                :value="option.text"
+                :checked="selectedOption === index"
+                @click="changeOption(index)"
+              />
+              <label :for="option.text">{{ option.text }}</label>
+            </div>
+          </div>
+
+          <div class="purchase" @click="addToCart">Aggiungi al carrello (<strong>{{ cart.length }}</strong>)</div>
+        </div>
+
+        <span class="total" @click="openCart">Totale: € <strong>{{ getCartTotalPrice() }}</strong></span>
+      </div>
+
+      <!-- Carrello -->
+      <div class="sidebar" :class="{'is-hidden': isCartClose, 'empty': cart.length === 0}">
+
+        <div class="item" v-for="(item) in cart">
+          <img
+            :src="`assets/img/product/${item.color}.png`"
+            :alt="item.name"
+          />
+          <div>
+            <p>{{ item.name }}</p>
+            <p class="quantity">{{ item.quantity }} x € {{ item.price }}</p>
+            <span class="remove">x</span>
+          </div>
+        </div>
+        <div v-if="cart.length > 0" class="subtotal">Totale: <span>€ {{ getCartTotalPrice() }}</span></div>
+
+        <!-- Questo viene stampato quando il carrello è vuoto -->
+        <div v-if="cart.length === 0">
+          <img src="assets/img/cart-empty.png" alt="Carrello vuoto" />
+          <p>Il carrello è vuoto</p>
+        </div>
+      </div>
+
+      <div class="overlay" :class="{'is-hidden': isCartClose}" @click="closeCart"></div>
+    </div>
+    <script src="./js/app.js"></script>
+  </body>
+</html>
