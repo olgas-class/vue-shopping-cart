@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>Vue Shopping Cart</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="card">
+        <div class="image">
+          <img
+            :src="`assets/img/product/${selectedColor}.png`"
+            alt="`iPhone 13 ${selectedColor} ${product.options[selectedOption].text}`"
+          />
+        </div>
+
+        <div class="detail">
+          <h1 class="title">
+            {{`iPhone 13 ${selectedColor}
+            ${product.options[selectedOption].text}`}}
+          </h1>
+          <p class="price">€ {{ calculatePrice() }}</p>
+
+          <h3>Colore:</h3>
+          <ul class="colors">
+            <!-- color item -->
+            <li
+              v-for="curColor in product.colors"
+              class="color"
+              :class="curColor === selectedColor ? 'selected' : ''"
+              :style="{'background-color': curColor}"
+              @click="changeColor(curColor)"
+            ></li>
+            <!-- /color item -->
+          </ul>
+
+          <h3>Memoria:</h3>
+          <div class="sizes">
+            <!-- single memory option -->
+            <div
+              v-for="(curOption, index) in product.options"
+              @click="changeMemory(index)"
+            >
+              <input
+                type="radio"
+                name="size"
+                :id="curOption.text"
+                :value="curOption.text"
+                checked
+              />
+              <label :for="curOption.text">{{ curOption.text }}</label>
+            </div>
+            <!-- /single memory option -->
+          </div>
+
+          <div class="purchase" @click="addToCart">Aggiungi al carrello (<strong>0</strong>)</div>
+        </div>
+
+        <span class="total">Totale: € <strong>0</strong></span>
+      </div>
+
+      <div class="sidebar is-hidden empty">
+        <div class="item">
+          <img
+            src="assets/img/product/black.png"
+            alt="iPhone 13 black 128 GB"
+          />
+          <div>
+            <p>iPhone 13 black 128 GB</p>
+            <p class="quantity">1 x € 1190</p>
+            <span class="remove">x</span>
+          </div>
+        </div>
+        <div class="subtotal">Totale: <span>€ 1190</span></div>
+
+        <div>
+          <img src="assets/img/cart-empty.png" alt="Carrello vuoto" />
+          <p>Il carrello è vuoto</p>
+        </div>
+      </div>
+
+      <div class="overlay is-hidden"></div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
